@@ -1,0 +1,11 @@
+D:\Desktop\MXHRM\HRM-System\src\HRM.Domain\bin\Debug\net10.0\HRM.Domain.deps.json
+D:\Desktop\MXHRM\HRM-System\src\HRM.Domain\bin\Debug\net10.0\HRM.Domain.dll
+D:\Desktop\MXHRM\HRM-System\src\HRM.Domain\bin\Debug\net10.0\HRM.Domain.pdb
+D:\Desktop\MXHRM\HRM-System\src\HRM.Domain\obj\Debug\net10.0\HRM.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\Desktop\MXHRM\HRM-System\src\HRM.Domain\obj\Debug\net10.0\HRM.Domain.AssemblyInfoInputs.cache
+D:\Desktop\MXHRM\HRM-System\src\HRM.Domain\obj\Debug\net10.0\HRM.Domain.AssemblyInfo.cs
+D:\Desktop\MXHRM\HRM-System\src\HRM.Domain\obj\Debug\net10.0\HRM.Domain.csproj.CoreCompileInputs.cache
+D:\Desktop\MXHRM\HRM-System\src\HRM.Domain\obj\Debug\net10.0\HRM.Domain.dll
+D:\Desktop\MXHRM\HRM-System\src\HRM.Domain\obj\Debug\net10.0\refint\HRM.Domain.dll
+D:\Desktop\MXHRM\HRM-System\src\HRM.Domain\obj\Debug\net10.0\HRM.Domain.pdb
+D:\Desktop\MXHRM\HRM-System\src\HRM.Domain\obj\Debug\net10.0\ref\HRM.Domain.dll

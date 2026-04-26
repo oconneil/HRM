@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "DcRMSg/xnHU=",
+  "success": true,
+  "projectFilePath": "D:\\Desktop\\MXHRM\\HRM-System\\src\\HRM.Application\\HRM.Application.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\oconn\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\10.0.6\\microsoft.extensions.dependencyinjection.abstractions.10.0.6.nupkg.sha512"
+  ],
+  "logs": []
+}

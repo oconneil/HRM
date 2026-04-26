@@ -1,0 +1,291 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.root{display:flex;gap:0;min-height:520px;font-size:13px}
+.sidebar{width:220px;flex-shrink:0;border-right:1px solid var(--color-border-tertiary);padding:12px 0}
+.tab{display:flex;align-items:center;gap:8px;padding:9px 16px;cursor:pointer;color:var(--color-text-secondary);border-left:3px solid transparent;transition:all .15s}
+.tab:hover{background:var(--color-background-secondary);color:var(--color-text-primary)}
+.tab.active{border-left-color:#185FA5;background:var(--color-background-secondary);color:var(--color-text-primary);font-weight:500}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.content{flex:1;padding:20px;overflow:auto}
+.tree{font-family:var(--font-mono);font-size:12.5px;line-height:1.85}
+.tree .folder{color:var(--color-text-primary);font-weight:500}
+.tree .file{color:var(--color-text-secondary)}
+.tree .comment{color:#639922;font-style:italic}
+.tree .indent1{padding-left:20px}
+.tree .indent2{padding-left:40px}
+.tree .indent3{padding-left:60px}
+.tree .indent4{padding-left:80px}
+.badge{display:inline-block;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:500;margin-left:6px;vertical-align:middle}
+.b-blue{background:#E6F1FB;color:#0C447C}
+.b-green{background:#EAF3DE;color:#27500A}
+.b-amber{background:#FAEEDA;color:#633806}
+.b-purple{background:#EEEDFE;color:#3C3489}
+.b-coral{background:#FAECE7;color:#712B13}
+.section-head{font-size:11px;font-weight:500;color:var(--color-text-tertiary);letter-spacing:.06em;padding:14px 16px 4px;text-transform:uppercase}
+.panel-title{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.panel-sub{font-size:12px;color:var(--color-text-secondary);margin-bottom:16px}
+@media(prefers-color-scheme:dark){.b-blue{background:#0C447C;color:#B5D4F4}.b-green{background:#27500A;color:#C0DD97}.b-amber{background:#633806;color:#FAC775}.b-purple{background:#3C3489;color:#CECBF6}.b-coral{background:#712B13;color:#F5C4B3}}
+</style>
+
+<div class="root">
+  <div class="sidebar">
+    <div class="section-head">Backend</div>
+    <div class="tab active" onclick="show('api')" id="tab-api">
+      <span class="dot" style="background:#185FA5"></span>HRM.Api
+    </div>
+    <div class="tab" onclick="show('app')" id="tab-app">
+      <span class="dot" style="background:#0F6E56"></span>HRM.Application
+    </div>
+    <div class="tab" onclick="show('domain')" id="tab-domain">
+      <span class="dot" style="background:#854F0B"></span>HRM.Domain
+    </div>
+    <div class="tab" onclick="show('infra')" id="tab-infra">
+      <span class="dot" style="background:#534AB7"></span>HRM.Infrastructure
+    </div>
+    <div class="tab" onclick="show('test')" id="tab-test">
+      <span class="dot" style="background:#3B6D11"></span>HRM.Tests
+    </div>
+    <div class="section-head">Frontend</div>
+    <div class="tab" onclick="show('ng')" id="tab-ng">
+      <span class="dot" style="background:#D85A30"></span>hrm-angular
+    </div>
+    <div class="section-head">DevOps</div>
+    <div class="tab" onclick="show('devops')" id="tab-devops">
+      <span class="dot" style="background:#888780"></span>Pipeline & Config
+    </div>
+  </div>
+
+  <div class="content" id="panel">
+  </div>
+</div>
+
+<script>
+const panels = {
+api: `<div class="panel-title">HRM.Api <span class="badge b-blue">.NET 10 Web API</span></div>
+<div class="panel-sub">Entry point — Controllers, Middleware, DI registration</div>
+<div class="tree">
+<div class="folder">HRM.Api/</div>
+<div class="indent1 folder">Controllers/</div>
+<div class="indent2 folder">v1/</div>
+<div class="indent3 file">EmployeeController.cs <span class="comment">// CRUD + search</span></div>
+<div class="indent3 file">LeaveController.cs</div>
+<div class="indent3 file">PayrollController.cs</div>
+<div class="indent3 file">AttendanceController.cs</div>
+<div class="indent3 file">ReportController.cs <span class="comment">// Telerik endpoints</span></div>
+<div class="indent1 folder">Middleware/</div>
+<div class="indent2 file">ExceptionHandlingMiddleware.cs</div>
+<div class="indent2 file">RequestLoggingMiddleware.cs</div>
+<div class="indent2 file">CorrelationIdMiddleware.cs</div>
+<div class="indent1 folder">Filters/</div>
+<div class="indent2 file">ValidationFilter.cs</div>
+<div class="indent2 file">ApiKeyAuthFilter.cs</div>
+<div class="indent1 folder">Models/</div>
+<div class="indent2 file">ApiResponse.cs <span class="comment">// Standardized wrapper</span></div>
+<div class="indent2 file">PaginatedResponse.cs</div>
+<div class="indent1 folder">Extensions/</div>
+<div class="indent2 file">ServiceCollectionExtensions.cs</div>
+<div class="indent2 file">SwaggerExtensions.cs</div>
+<div class="indent1 file">Program.cs</div>
+<div class="indent1 file">appsettings.json</div>
+<div class="indent1 file">appsettings.Development.json</div>
+</div>`,
+
+app: `<div class="panel-title">HRM.Application <span class="badge b-green">Business Logic</span></div>
+<div class="panel-sub">CQRS pattern — Commands, Queries, Handlers, DTOs, AutoMapper Profiles</div>
+<div class="tree">
+<div class="folder">HRM.Application/</div>
+<div class="indent1 folder">Common/</div>
+<div class="indent2 file">Interfaces/ <span class="comment">// IRepository, IUnitOfWork</span></div>
+<div class="indent2 file">Mappings/MappingProfile.cs <span class="comment">// AutoMapper</span></div>
+<div class="indent2 file">Behaviours/ValidationBehaviour.cs <span class="comment">// MediatR pipeline</span></div>
+<div class="indent2 file">Exceptions/NotFoundException.cs</div>
+<div class="indent1 folder">Employees/</div>
+<div class="indent2 folder">Commands/</div>
+<div class="indent3 file">CreateEmployeeCommand.cs</div>
+<div class="indent3 file">UpdateEmployeeCommand.cs</div>
+<div class="indent3 file">CreateEmployeeCommandHandler.cs</div>
+<div class="indent2 folder">Queries/</div>
+<div class="indent3 file">GetEmployeeListQuery.cs</div>
+<div class="indent3 file">GetEmployeeByIdQuery.cs</div>
+<div class="indent3 file">GetEmployeeListQueryHandler.cs</div>
+<div class="indent2 folder">DTOs/</div>
+<div class="indent3 file">EmployeeReadDto.cs</div>
+<div class="indent3 file">EmployeeWriteDto.cs</div>
+<div class="indent3 file">EmployeeListDto.cs</div>
+<div class="indent2 file">Validators/CreateEmployeeValidator.cs <span class="comment">// FluentValidation</span></div>
+<div class="indent1 folder">Leave/</div>
+<div class="indent2 file">Commands/ Queries/ DTOs/ Validators/</div>
+<div class="indent1 folder">Payroll/</div>
+<div class="indent2 file">Commands/ Queries/ DTOs/</div>
+<div class="indent1 file">DependencyInjection.cs</div>
+</div>`,
+
+domain: `<div class="panel-title">HRM.Domain <span class="badge b-amber">Core Domain</span></div>
+<div class="panel-sub">Entities, Value Objects, Domain Events — ไม่ depend ใคร</div>
+<div class="tree">
+<div class="folder">HRM.Domain/</div>
+<div class="indent1 folder">Entities/</div>
+<div class="indent2 file">Employee.cs <span class="comment">// AggregateRoot</span></div>
+<div class="indent2 file">Department.cs</div>
+<div class="indent2 file">Position.cs</div>
+<div class="indent2 file">LeaveRequest.cs</div>
+<div class="indent2 file">LeaveBalance.cs</div>
+<div class="indent2 file">PayrollRecord.cs</div>
+<div class="indent2 file">Attendance.cs</div>
+<div class="indent1 folder">ValueObjects/</div>
+<div class="indent2 file">EmployeeCode.cs</div>
+<div class="indent2 file">Money.cs <span class="comment">// Amount + Currency</span></div>
+<div class="indent2 file">DateRange.cs</div>
+<div class="indent2 file">Address.cs</div>
+<div class="indent1 folder">Enums/</div>
+<div class="indent2 file">EmployeeStatus.cs</div>
+<div class="indent2 file">LeaveType.cs</div>
+<div class="indent2 file">Gender.cs</div>
+<div class="indent1 folder">Events/</div>
+<div class="indent2 file">EmployeeCreatedEvent.cs</div>
+<div class="indent2 file">LeaveApprovedEvent.cs</div>
+<div class="indent1 folder">Interfaces/</div>
+<div class="indent2 file">IRepository.cs <span class="comment">// Generic</span></div>
+<div class="indent2 file">IEmployeeRepository.cs</div>
+<div class="indent1 folder">Exceptions/</div>
+<div class="indent2 file">DomainException.cs</div>
+<div class="indent2 file">InvalidLeaveRequestException.cs</div>
+<div class="indent1 file">BaseEntity.cs <span class="comment">// Id, CreatedAt, UpdatedAt</span></div>
+</div>`,
+
+infra: `<div class="panel-title">HRM.Infrastructure <span class="badge b-purple">Data & External</span></div>
+<div class="panel-sub">EF Core, SQL Server, Redis, Blob Storage, Email, Azure AD</div>
+<div class="tree">
+<div class="folder">HRM.Infrastructure/</div>
+<div class="indent1 folder">Persistence/</div>
+<div class="indent2 file">HrmDbContext.cs <span class="comment">// EF Core DbContext</span></div>
+<div class="indent2 folder">Configurations/ <span class="comment">// IEntityTypeConfiguration</span></div>
+<div class="indent3 file">EmployeeConfiguration.cs</div>
+<div class="indent3 file">LeaveRequestConfiguration.cs</div>
+<div class="indent2 folder">Repositories/</div>
+<div class="indent3 file">EmployeeRepository.cs</div>
+<div class="indent3 file">LeaveRepository.cs</div>
+<div class="indent2 folder">Migrations/ <span class="comment">// EF Code First</span></div>
+<div class="indent2 file">UnitOfWork.cs</div>
+<div class="indent1 folder">Identity/</div>
+<div class="indent2 file">ApplicationUser.cs <span class="comment">// ASP.NET Identity</span></div>
+<div class="indent2 file">ApplicationRole.cs</div>
+<div class="indent2 file">PermissionService.cs</div>
+<div class="indent1 folder">Caching/</div>
+<div class="indent2 file">RedisCacheService.cs</div>
+<div class="indent2 file">CacheKeys.cs</div>
+<div class="indent1 folder">Storage/</div>
+<div class="indent2 file">BlobStorageService.cs <span class="comment">// Azure Blob</span></div>
+<div class="indent1 folder">Notifications/</div>
+<div class="indent2 file">EmailService.cs <span class="comment">// SendGrid</span></div>
+<div class="indent1 folder">Reports/</div>
+<div class="indent2 file">TelerikReportService.cs</div>
+<div class="indent2 file">ReportDefinitions/ <span class="comment">// .trdp files</span></div>
+<div class="indent1 file">DependencyInjection.cs</div>
+</div>`,
+
+test: `<div class="panel-title">HRM.Tests <span class="badge b-green">Automated Tests</span></div>
+<div class="panel-sub">Unit, Integration, E2E — xUnit + Moq + TestContainers</div>
+<div class="tree">
+<div class="folder">HRM.Tests/</div>
+<div class="indent1 folder">Unit/</div>
+<div class="indent2 folder">Application/</div>
+<div class="indent3 file">Employees/CreateEmployeeCommandHandlerTests.cs</div>
+<div class="indent3 file">Leave/LeaveRequestValidatorTests.cs</div>
+<div class="indent2 folder">Domain/</div>
+<div class="indent3 file">EmployeeTests.cs <span class="comment">// Domain logic</span></div>
+<div class="indent3 file">LeaveRequestTests.cs</div>
+<div class="indent2 file">Common/TestBase.cs</div>
+<div class="indent1 folder">Integration/</div>
+<div class="indent2 folder">Api/</div>
+<div class="indent3 file">EmployeeApiTests.cs <span class="comment">// WebApplicationFactory</span></div>
+<div class="indent3 file">LeaveApiTests.cs</div>
+<div class="indent2 folder">Persistence/</div>
+<div class="indent3 file">EmployeeRepositoryTests.cs <span class="comment">// TestContainers SQL</span></div>
+<div class="indent2 file">IntegrationTestBase.cs</div>
+<div class="indent2 file">CustomWebApplicationFactory.cs</div>
+<div class="indent1 folder">Fixtures/</div>
+<div class="indent2 file">EmployeeFaker.cs <span class="comment">// Bogus fake data</span></div>
+<div class="indent2 file">LeaveFaker.cs</div>
+<div class="indent1 file">GlobalUsings.cs</div>
+</div>`,
+
+ng: `<div class="panel-title">hrm-angular <span class="badge b-coral">Angular 21+</span></div>
+<div class="panel-sub">Standalone Components, Kendo UI, Reactive Forms, NSwag-generated models</div>
+<div class="tree">
+<div class="folder">hrm-angular/</div>
+<div class="indent1 folder">src/app/</div>
+<div class="indent2 folder">core/ <span class="comment">// Singleton services</span></div>
+<div class="indent3 file">auth/ <span class="comment">// MSAL, guards, interceptors</span></div>
+<div class="indent3 file">http/ <span class="comment">// Base API service</span></div>
+<div class="indent3 file">layout/ <span class="comment">// Shell, navbar, sidebar</span></div>
+<div class="indent3 file">interceptors/ <span class="comment">// JWT, error, loading</span></div>
+<div class="indent2 folder">shared/ <span class="comment">// Reusable components</span></div>
+<div class="indent3 file">components/ <span class="comment">// Kendo wrappers</span></div>
+<div class="indent3 file">pipes/ <span class="comment">// date-th, currency-th</span></div>
+<div class="indent3 file">directives/</div>
+<div class="indent3 file">models/ <span class="comment">// NSwag auto-gen TS</span></div>
+<div class="indent2 folder">features/</div>
+<div class="indent3 folder">employee/</div>
+<div class="indent4 file">employee-list/ <span class="comment">// Kendo Grid</span></div>
+<div class="indent4 file">employee-form/ <span class="comment">// Reactive Form</span></div>
+<div class="indent4 file">employee.service.ts</div>
+<div class="indent4 file">employee.routes.ts</div>
+<div class="indent3 folder">leave/</div>
+<div class="indent4 file">leave-request/ leave-approve/ leave.service.ts</div>
+<div class="indent3 folder">payroll/</div>
+<div class="indent3 folder">attendance/</div>
+<div class="indent3 folder">report/ <span class="comment">// Telerik viewer</span></div>
+<div class="indent2 folder">store/ <span class="comment">// NgRx (optional)</span></div>
+<div class="indent3 file">employee/ leave/ payroll/</div>
+<div class="indent1 folder">src/assets/</div>
+<div class="indent1 folder">src/environments/</div>
+<div class="indent2 file">environment.ts</div>
+<div class="indent2 file">environment.prod.ts</div>
+<div class="indent1 file">angular.json</div>
+<div class="indent1 file">jest.config.ts</div>
+<div class="indent1 file">playwright.config.ts</div>
+</div>`,
+
+devops: `<div class="panel-title">Pipeline & Config <span class="badge b-blue">Azure DevOps</span></div>
+<div class="panel-sub">Solution root, CI/CD YAML, Docker, environment configs</div>
+<div class="tree">
+<div class="folder">HRM-System/ <span class="comment">// Solution root</span></div>
+<div class="indent1 file">HRM.sln</div>
+<div class="indent1 file">.gitignore</div>
+<div class="indent1 file">README.md</div>
+<div class="indent1 folder">src/</div>
+<div class="indent2 file">HRM.Api/</div>
+<div class="indent2 file">HRM.Application/</div>
+<div class="indent2 file">HRM.Domain/</div>
+<div class="indent2 file">HRM.Infrastructure/</div>
+<div class="indent2 file">hrm-angular/</div>
+<div class="indent1 folder">tests/</div>
+<div class="indent2 file">HRM.Tests/</div>
+<div class="indent1 folder">.azure/ <span class="comment">// CI/CD Pipelines</span></div>
+<div class="indent2 file">pipeline-build.yml <span class="comment">// dotnet + ng build</span></div>
+<div class="indent2 file">pipeline-test.yml <span class="comment">// xUnit + Jest + coverage</span></div>
+<div class="indent2 file">pipeline-deploy-staging.yml</div>
+<div class="indent2 file">pipeline-deploy-prod.yml</div>
+<div class="indent1 folder">docker/ <span class="comment">// Local dev</span></div>
+<div class="indent2 file">docker-compose.yml <span class="comment">// SQL, Redis, API, Angular</span></div>
+<div class="indent2 file">Dockerfile.api</div>
+<div class="indent2 file">Dockerfile.angular</div>
+<div class="indent1 folder">docs/</div>
+<div class="indent2 file">architecture.md</div>
+<div class="indent2 file">api-conventions.md</div>
+<div class="indent2 file">database-migrations.md</div>
+<div class="indent1 file">.editorconfig</div>
+<div class="indent1 file">Directory.Build.props <span class="comment">// Shared NuGet versions</span></div>
+</div>`
+};
+
+function show(key) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + key).classList.add('active');
+  document.getElementById('panel').innerHTML = panels[key];
+}
+
+show('api');
+</script>

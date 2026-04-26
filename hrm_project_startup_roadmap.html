@@ -1,0 +1,377 @@
+
+<style>
+.roadmap{display:flex;flex-direction:column;gap:16px;padding:8px 0}
+.phase{border-left:4px solid var(--color-border-secondary);padding-left:16px;padding-right:8px}
+.phase h3{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.phase p{font-size:13px;color:var(--color-text-secondary);line-height:1.5;margin-bottom:8px}
+.tasks{display:flex;flex-direction:column;gap:6px}
+.task{display:flex;gap:8px;font-size:13px}
+.task-check{width:20px;height:20px;flex-shrink:0;border-radius:50%;background:var(--color-background-secondary);border:1.5px solid var(--color-border-secondary);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500}
+.task-num{color:var(--color-text-secondary)}
+.task-text{color:var(--color-text-primary)}
+.task-desc{color:var(--color-text-tertiary);font-size:12px;margin-left:28px;margin-top:-2px}
+.tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:500;margin-left:6px}
+.tag-db{background:#FAEEDA;color:#633806}
+.tag-api{background:#E6F1FB;color:#0C447C}
+.tag-auth{background:#EAF3DE;color:#27500A}
+.tag-ui{background:#FAECE7;color:#712B13}
+@media(prefers-color-scheme:dark){
+.tag-db{background:#633806;color:#FAC775}
+.tag-api{background:#0C447C;color:#B5D4F4}
+.tag-auth{background:#27500A;color:#C0DD97}
+.tag-ui{background:#712B13;color:#F5C4B3}
+}
+.duration{color:var(--color-text-tertiary);font-size:12px;margin-top:4px}
+.week-badge{display:inline-block;padding:2px 6px;background:var(--color-background-secondary);border-radius:4px;font-size:11px;font-weight:500;margin-left:8px}
+</style>
+
+<div class="roadmap">
+  <div class="phase" style="border-left-color:#BA7517">
+    <h3>1️⃣ Setup & Database Foundation</h3>
+    <p>ตั้ง solution, EF Core migrations, database schema</p>
+    <div class="tasks">
+      <div class="task">
+        <div class="task-check"><span class="task-num">1.1</span></div>
+        <div>
+          <div class="task-text">สร้าง .NET 10 Solution structure (Clean Architecture 4-layer) <span class="tag tag-api">Backend</span></div>
+          <div class="task-desc">dotnet new sln, dotnet new classlib × 4 (Domain, Application, Infrastructure, Api)</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">1.2</span></div>
+        <div>
+          <div class="task-text">Install & configure EF Core + SQL Server <span class="tag tag-db">Database</span></div>
+          <div class="task-desc">NuGet: Microsoft.EntityFrameworkCore.SqlServer, add DbContext base class</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">1.3</span></div>
+        <div>
+          <div class="task-text">ออกแบบ & migrate Employee, Department, Position, Role, Permission schema <span class="tag tag-db">Database</span></div>
+          <div class="task-desc">Fluent API IEntityTypeConfiguration per entity, dotnet ef migrations add Initial</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">1.4</span></div>
+        <div>
+          <div class="task-text">Seed base data (departments, positions, roles) <span class="tag tag-db">Database</span></div>
+          <div class="task-desc">ใช้ HasData() ใน OnModelCreating หรือ SeedData.cs ในการ migrate</div>
+        </div>
+      </div>
+    </div>
+    <div class="duration"><span class="week-badge">📅 1 week</span> ขึ้นอยู่กับขนาด schema</div>
+  </div>
+
+  <div class="phase" style="border-left-color:#185FA5">
+    <h3>2️⃣ ASP.NET Core Identity & Authentication</h3>
+    <p>Setup Identity, JWT, Azure AD integration (optional), login endpoint</p>
+    <div class="tasks">
+      <div class="task">
+        <div class="task-check"><span class="task-num">2.1</span></div>
+        <div>
+          <div class="task-text">Install ASP.NET Core Identity NuGet packages <span class="tag tag-auth">Auth</span></div>
+          <div class="task-desc">Microsoft.AspNetCore.Identity.EntityFrameworkCore, add IdentityDbContext</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">2.2</span></div>
+        <div>
+          <div class="task-text">Configure JWT authentication middleware <span class="tag tag-auth">Auth</span></div>
+          <div class="task-desc">Microsoft.AspNetCore.Authentication.JwtBearer, AddAuthentication().AddJwtBearer()</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">2.3</span></div>
+        <div>
+          <div class="task-text">สร้าง AuthController: Login, Refresh Token endpoints <span class="tag tag-api">API</span></div>
+          <div class="task-desc">Return JWT access token + refresh token, store refresh ใน DB หรือ Redis</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">2.4</span></div>
+        <div>
+          <div class="task-text">ตั้ง Authorization Policy (Role-based + Permission-based) <span class="tag tag-auth">Auth</span></div>
+          <div class="task-desc">AddAuthorization() policy: [Authorize(Policy="HrManager")] ใน controller</div>
+        </div>
+      </div>
+    </div>
+    <div class="duration"><span class="week-badge">📅 1 week</span> ขึ้นอยู่กับ SSO requirement</div>
+  </div>
+
+  <div class="phase" style="border-left-color:#0F6E56">
+    <h3>3️⃣ Domain Model & Application Layer</h3>
+    <p>สร้าง Entity, Repository, MediatR Handlers, AutoMapper Profiles</p>
+    <div class="tasks">
+      <div class="task">
+        <div class="task-check"><span class="task-num">3.1</span></div>
+        <div>
+          <div class="task-text">สร้าง Core Domain Entities (Employee, Leave, Payroll, Attendance) <span class="tag tag-api">Backend</span></div>
+          <div class="task-desc">Value Objects, Enums, Domain Events (อยากมี architecture ดี)</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">3.2</span></div>
+        <div>
+          <div class="task-text">สร้าง DTOs (ReadDto, WriteDto, UpdateDto) <span class="tag tag-api">Backend</span></div>
+          <div class="task-desc">Add FluentValidation validators, data annotations</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">3.3</span></div>
+        <div>
+          <div class="task-text">Setup AutoMapper MappingProfile <span class="tag tag-api">Backend</span></div>
+          <div class="task-desc">Configure profiles by module (EmployeeMappingProfile, LeaveMappingProfile)</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">3.4</span></div>
+        <div>
+          <div class="task-text">Install & configure MediatR <span class="tag tag-api">Backend</span></div>
+          <div class="task-desc">Commands, Queries, Handlers, Behaviors (ValidationBehavior, LoggingBehavior)</div>
+        </div>
+      </div>
+    </div>
+    <div class="duration"><span class="week-badge">📅 1.5 weeks</span> ค่อยๆ expand entities</div>
+  </div>
+
+  <div class="phase" style="border-left-color:#854F0B">
+    <h3>4️⃣ Repository & Infrastructure</h3>
+    <p>EF Core Repositories, Unit of Work, Caching, External services</p>
+    <div class="tasks">
+      <div class="task">
+        <div class="task-check"><span class="task-num">4.1</span></div>
+        <div>
+          <div class="task-text">สร้าง Generic Repository + UnitOfWork pattern <span class="tag tag-api">Backend</span></div>
+          <div class="task-desc">IRepository&lt;T&gt;, IUnitOfWork, EF Core implementation</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">4.2</span></div>
+        <div>
+          <div class="task-text">Setup Redis caching (optional ตอนนี้) <span class="tag tag-db">Database</span></div>
+          <div class="task-desc">StackExchange.Redis, CacheService wrapper, key naming convention</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">4.3</span></div>
+        <div>
+          <div class="task-text">Setup Email / Notification service (optional ตอนนี้) <span class="tag tag-api">Backend</span></div>
+          <div class="task-desc">SendGrid หรือ SMTP, EmailService interface</div>
+        </div>
+      </div>
+    </div>
+    <div class="duration"><span class="week-badge">📅 1 week</span></div>
+  </div>
+
+  <div class="phase" style="border-left-color:#534AB7">
+    <h3>5️⃣ API Layer & Swagger</h3>
+    <p>สร้าง Controllers, API response wrapper, Swagger docs</p>
+    <div class="tasks">
+      <div class="task">
+        <div class="task-check"><span class="task-num">5.1</span></div>
+        <div>
+          <div class="task-text">สร้าง BaseController + ApiResponse wrapper <span class="tag tag-api">API</span></div>
+          <div class="task-desc">Standardize Ok(data), BadRequest(errors), Unauthorized() responses</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">5.2</span></div>
+        <div>
+          <div class="task-text">สร้าง Employee CRUD endpoints (GET, POST, PUT, DELETE) <span class="tag tag-api">API</span></div>
+          <div class="task-desc">Route: /api/v1/employees, with query params for filtering/pagination</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">5.3</span></div>
+        <div>
+          <div class="task-text">Setup Swagger / OpenAPI documentation <span class="tag tag-api">API</span></div>
+          <div class="task-desc">Swashbuckle, XML doc comments, configure for v1 versioning</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">5.4</span></div>
+        <div>
+          <div class="task-text">Test API ใน Swagger/Postman <span class="tag tag-api">API</span></div>
+          <div class="task-desc">ตรวจสอบ login, JWT token, employee endpoints</div>
+        </div>
+      </div>
+    </div>
+    <div class="duration"><span class="week-badge">📅 1.5 weeks</span></div>
+  </div>
+
+  <div class="phase" style="border-left-color:#3B6D11">
+    <h3>6️⃣ Angular Setup & Layout</h3>
+    <p>Create Angular project, shell/layout, routing, HttpClient interceptors</p>
+    <div class="tasks">
+      <div class="task">
+        <div class="task-check"><span class="task-num">6.1</span></div>
+        <div>
+          <div class="task-text">สร้าง Angular 21+ project (standalone components) <span class="tag tag-ui">Frontend</span></div>
+          <div class="task-desc">ng new hrm-angular, setup TypeScript config for strict mode</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">6.2</span></div>
+        <div>
+          <div class="task-text">Install Bootstrap 5 + Kendo UI + Telerik packages <span class="tag tag-ui">Frontend</span></div>
+          <div class="task-desc">npm install, configure Kendo theme (default/bootstrap), add Telerik License</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">6.3</span></div>
+        <div>
+          <div class="task-text">สร้าง AppShell (navbar, sidebar, routing) <span class="tag tag-ui">Frontend</span></div>
+          <div class="task-desc">Layout component, RouterOutlet, navigation menu</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">6.4</span></div>
+        <div>
+          <div class="task-text">Setup HttpClient interceptors (JWT, error handling) <span class="tag tag-ui">Frontend</span></div>
+          <div class="task-desc">AuthInterceptor, ErrorInterceptor, LoadingInterceptor</div>
+        </div>
+      </div>
+    </div>
+    <div class="duration"><span class="week-badge">📅 1 week</span></div>
+  </div>
+
+  <div class="phase" style="border-left-color:#D85A30">
+    <h3>7️⃣ Authentication UI (Login Page)</h3>
+    <p>Build login form, MSAL integration, token storage, guards</p>
+    <div class="tasks">
+      <div class="task">
+        <div class="task-check"><span class="task-num">7.1</span></div>
+        <div>
+          <div class="task-text">สร้าง AuthService (login, logout, token management) <span class="tag tag-ui">Frontend</span></div>
+          <div class="task-desc">Call /api/v1/auth/login, store JWT in localStorage/sessionStorage</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">7.2</span></div>
+        <div>
+          <div class="task-text">สร้าง Login component (email, password, submit button) <span class="tag tag-ui">Frontend</span></div>
+          <div class="task-desc">Reactive Forms, Bootstrap form styling, error messages</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">7.3</span></div>
+        <div>
+          <div class="task-text">สร้าง AuthGuard + RoleGuard <span class="tag tag-ui">Frontend</span></div>
+          <div class="task-desc">canActivate() check JWT expiry, redirect to /login</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">7.4</span></div>
+        <div>
+          <div class="task-text">Test login flow end-to-end (Browser → API → Token store) <span class="tag tag-ui">Frontend</span></div>
+          <div class="task-desc">Navigate to protected page, verify redirect to /login</div>
+        </div>
+      </div>
+    </div>
+    <div class="duration"><span class="week-badge">📅 1 week</span></div>
+  </div>
+
+  <div class="phase" style="border-left-color:#0F6E56">
+    <h3>8️⃣ Employee List Page (CRUD)</h3>
+    <p>Kendo Grid, search/filter, CRUD forms, API integration</p>
+    <div class="tasks">
+      <div class="task">
+        <div class="task-check"><span class="task-num">8.1</span></div>
+        <div>
+          <div class="task-text">สร้าง EmployeeService (CRUD methods + search) <span class="tag tag-ui">Frontend</span></div>
+          <div class="task-desc">getEmployees(page, filter), getById(), create(), update(), delete()</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">8.2</span></div>
+        <div>
+          <div class="task-text">Generate TypeScript models จาก OpenAPI (NSwag) <span class="tag tag-ui">Frontend</span></div>
+          <div class="task-desc">nswag, copy EmployeeDto interfaces to shared/models</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">8.3</span></div>
+        <div>
+          <div class="task-text">สร้าง Employee List component with Kendo Grid <span class="tag tag-ui">Frontend</span></div>
+          <div class="task-desc">Columns: ID, Name, Email, Department, Actions (Edit/Delete), pagination, sort</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">8.4</span></div>
+        <div>
+          <div class="task-text">สร้าง Employee Form (Create/Edit) with validation <span class="tag tag-ui">Frontend</span></div>
+          <div class="task-desc">Kendo form components, dropdown for department, date picker for DOB</div>
+        </div>
+      </div>
+    </div>
+    <div class="duration"><span class="week-badge">📅 1.5 weeks</span></div>
+  </div>
+
+  <div class="phase" style="border-left-color:#534AB7">
+    <h3>9️⃣ Unit Testing Setup</h3>
+    <p>xUnit + Moq, Jest + Testing Library, CI/CD ready</p>
+    <div class="tasks">
+      <div class="task">
+        <div class="task-check"><span class="task-num">9.1</span></div>
+        <div>
+          <div class="task-text">Setup xUnit + Moq + FluentAssertions in .NET <span class="tag tag-api">Backend</span></div>
+          <div class="task-desc">Create HRM.Tests project, write first unit test for EmployeeService</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">9.2</span></div>
+        <div>
+          <div class="task-text">Setup Jest + @testing-library/angular <span class="tag tag-ui">Frontend</span></div>
+          <div class="task-desc">jest.config.ts, test one component (LoginComponent), coverage report</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">9.3</span></div>
+        <div>
+          <div class="task-text">Add WebApplicationFactory + TestContainers for integration tests <span class="tag tag-api">Backend</span></div>
+          <div class="task-desc">One integration test: POST /api/v1/auth/login verify JWT response</div>
+        </div>
+      </div>
+    </div>
+    <div class="duration"><span class="week-badge">📅 1 week</span></div>
+  </div>
+
+  <div class="phase" style="border-left-color:#BA7517">
+    <h3>🔟 CI/CD Pipeline + Deployment</h3>
+    <p>Azure DevOps YAML pipelines, build, test, deploy to staging</p>
+    <div class="tasks">
+      <div class="task">
+        <div class="task-check"><span class="task-num">10.1</span></div>
+        <div>
+          <div class="task-text">สร้าง Azure DevOps pipeline (build) <span class="tag tag-api">Backend</span></div>
+          <div class="task-desc">dotnet build, ng build, collect artifacts</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">10.2</span></div>
+        <div>
+          <div class="task-text">Add test stage (xUnit + Jest + coverage gates) <span class="tag tag-api">Backend</span></div>
+          <div class="task-desc">pipeline-test.yml, fail if coverage < 80% (configurable)</div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-check"><span class="task-num">10.3</span></div>
+        <div>
+          <div class="task-text">Deploy to Azure App Service (staging slot) <span class="tag tag-api">Backend</span></div>
+          <div class="task-desc">pipeline-deploy.yml, deploy both API + Angular SPA separately</div>
+        </div>
+      </div>
+    </div>
+    <div class="duration"><span class="week-badge">📅 1.5 weeks</span> + ops learning curve</div>
+  </div>
+
+  <div style="margin-top:16px;padding:12px;background:var(--color-background-secondary);border-radius:8px">
+    <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px">📌 Tips for success</div>
+    <ul style="font-size:12px;color:var(--color-text-secondary);margin:0;padding-left:20px;line-height:1.6">
+      <li>อย่าข้ามขั้นตอนที่ 1-2 แม้ดูนาน ฐานรากชัดเจนช่วยส่วนข้างหน้าได้มาก</li>
+      <li>ในแต่ละ phase ให้สร้าง unit test ก่อนหรือพร้อมกับ feature (TDD optional)</li>
+      <li>ถ้า team มี 3+ คน แบ่ง parallel: ฝั่ง API (ขั้น 2-5), ฝั่ง UI (ขั้น 6-8)</li>
+      <li>อย่า perfectionist ขั้นแรก — release MVP แล้วค่อยปรับปรุง</li>
+    </ul>
+  </div>
+</div>
